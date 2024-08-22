@@ -2,30 +2,31 @@ package handler
 
 import (
 	"github.com/labstack/echo/v4"
-	"toky/internal/domain/usecase"
 )
 
 type Handler struct {
-	*FileGroup
+	fileGroup  *FileGroup
+	authGroup  *AuthGroup
+	middleware *Middleware
 }
 
-func New(e *echo.Echo, usecase usecase.FileUseCase) *Handler {
-	fileGroup := NewFileGroup(&usecase)
-
+func NewHandler(e *echo.Echo, fileGroup *FileGroup, authGroup *AuthGroup, middleware *Middleware) *Handler {
 	handler := &Handler{
-		FileGroup: fileGroup,
+		fileGroup:  fileGroup,
+		authGroup:  authGroup,
+		middleware: middleware,
 	}
 
-	auth:=e.Group("/auth")
+	auth := e.Group("/auth")
 	{
-		auth.POST("/login", handler.Login)
-		auth.POST("/register", handler.Register)
+		auth.POST("/login", handler.authGroup.SignIn)
+		auth.POST("/register", handler.authGroup.Register)
 	}
-	api := e.Group("/api/v1")
+	api := e.Group("/api/v1", handler.middleware.userIdentity)
 	{
 		files := api.Group("/files")
 		{
-			files.POST("/", handler.Save)
+			files.POST("/", handler.fileGroup.Save)
 		}
 	}
 
