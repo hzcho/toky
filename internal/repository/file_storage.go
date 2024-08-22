@@ -11,6 +11,12 @@ type FileStorage struct{
 	UploadDir string
 }
 
+func NewFileStorage(dir string)*FileStorage{
+	return &FileStorage{
+		UploadDir: dir,
+	}
+}
+
 func (r*FileStorage) SaveFile(ctx context.Context, fileName string, file io.Reader) error{
 	fullPath:=filepath.Join(r.UploadDir, fileName)
 

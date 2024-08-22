@@ -7,7 +7,13 @@ import (
 )
 
 type FileMetadata struct {
-	db pgxpool.Pool
+	db *pgxpool.Pool
+}
+
+func NewFileMetadata(db *pgxpool.Pool)*FileMetadata{
+	return &FileMetadata{
+		db: db,
+	}
 }
 
 func (r *FileMetadata) Save(ctx context.Context, metadata *model.FileMetadata) error {

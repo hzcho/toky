@@ -10,7 +10,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func InitializeFile(log *slog.Logger, db *pgxpool.Pool) *handler.Handler {
+func InitializeFile(log *slog.Logger, db *pgxpool.Pool, ) *handler.Handler {
 	wire.Bind(
 		repository.NewFileMetadata,
 		repository.NewFileStorage,
