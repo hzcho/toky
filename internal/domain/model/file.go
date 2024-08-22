@@ -5,7 +5,7 @@ import "time"
 type FileMetadata struct{
 	ID string
 	FileName string
-	ContentType string
 	Path string
+	Size int64
 	CreatedAt time.Time
 }
