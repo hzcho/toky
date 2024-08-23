@@ -6,6 +6,7 @@ import (
 	"toky/internal/domain/model"
 	"toky/internal/domain/repository"
 	"toky/internal/token"
+	"context"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -24,7 +25,7 @@ func NewAuth(userRepo repository.User, log *slog.Logger, exp int64)*Auth{
 	}
 }
 
-func (u *Auth) CreateUser(email, password string) (int64, error) {
+func (u *Auth) CreateUser(ctx context.Context, email, password string) (uint64, error) {
 	const op="internal/usecase/auth/CreateUser"
 	log:=u.log.With(
 		slog.String("operation", op),
@@ -37,7 +38,7 @@ func (u *Auth) CreateUser(email, password string) (int64, error) {
 		return 0, err
 	}
 
-	userId, err := u.userRepo.Save(email, string(passHash))
+	userId, err := u.userRepo.Save(ctx, email, string(passHash))
 	if err != nil {
 		log.Error(err.Error())
 		return 0, err
@@ -46,7 +47,7 @@ func (u *Auth) CreateUser(email, password string) (int64, error) {
 	return userId, nil
 }
 
-func (u *Auth) GenerateToken(email, password string) (string, error) {
+func (u *Auth) GenerateToken(ctx context.Context, email, password string) (string, error) {
 	const op="internal/usecase/auth/GenerateToken"
 	log:=u.log.With(
 		slog.String("operation", op),
@@ -55,7 +56,7 @@ func (u *Auth) GenerateToken(email, password string) (string, error) {
 
 	passHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 
-	user, err := u.userRepo.User(email, string(passHash))
+	user, err := u.userRepo.User(ctx, email, string(passHash))
 	if user == (model.User{}) {
 		err:=errors.New("the user does not exist")
 
@@ -76,7 +77,7 @@ func (u *Auth) GenerateToken(email, password string) (string, error) {
 	return token, err
 }
 
-func (u *Auth) VerifyToken(tkn string) (string, error) {
+func (u *Auth) VerifyToken(ctx context.Context, tkn string) (string, error) {
 	const op="internal/usecase/auth/VerifyToken"
 	log:=u.log.With(
 		slog.String("operation", op),

@@ -23,7 +23,7 @@ func (g *AuthGroup) SignIn(c echo.Context) error{
 		return c.JSON(http.StatusBadRequest, "incorrect request structure")
 	}
 
-	token, err:=g.auth.GenerateToken(input.Email, input.Password)
+	token, err:=g.auth.GenerateToken(c.Request().Context(), input.Email, input.Password)
 	if err!=nil{
 		return c.JSON(http.StatusInternalServerError, "couldn't create the token")
 	}
@@ -40,7 +40,7 @@ func (g *AuthGroup) Register(c echo.Context) error{
 		return c.JSON(http.StatusBadRequest, "incorrect request structure")
 	}
 
-	userId, err:=g.auth.CreateUser(input.Email, input.Password)
+	userId, err:=g.auth.CreateUser(c.Request().Context(), input.Email, input.Password)
 	if err!=nil{
 		return c.JSON(http.StatusInternalServerError, "couldn't create the user")
 	}

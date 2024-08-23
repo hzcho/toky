@@ -33,7 +33,7 @@ func (m *Middleware) userIdentity(next echo.HandlerFunc) echo.HandlerFunc {
 			return c.JSON(http.StatusUnauthorized, "token is empty")
 		}
 
-		email, err := m.auth.VerifyToken(parts[1])
+		email, err := m.auth.VerifyToken(c.Request().Context(), parts[1])
 		if err != nil {
 			return c.JSON(http.StatusUnauthorized, "invalid token")
 		}
