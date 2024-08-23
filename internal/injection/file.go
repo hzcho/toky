@@ -10,15 +10,26 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func InitializeFile(log *slog.Logger, db *pgxpool.Pool, ) *handler.Handler {
-	wire.Bind(
-		repository.NewFileMetadata,
-		repository.NewFileStorage,
-		repository.NewUser,
-		usecase.NewFile,
-		usecase.NewAuth,
-		handler.NewHandler,
-	)
+var ProvideRepositories = wire.NewSet(
+	repository.NewFileMetadata,
+	repository.NewFileStorage,
+	repository.NewUser,
+)
 
+var ProvideUseCases = wire.NewSet(
+	usecase.NewFile,
+	usecase.NewAuth,
+)
+
+var ProvideHandler = wire.NewSet(
+	handler.NewHandler,
+)
+
+func InitializeFile(log *slog.Logger, db *pgxpool.Pool) *handler.Handler {
+	wire.Build(
+		ProvideRepositories,
+		ProvideUseCases,
+		ProvideHandler,
+	)
 	return &handler.Handler{}
 }
