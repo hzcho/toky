@@ -1,3 +1,6 @@
+//go:build wireinject
+// +build wireinject
+
 package injection
 
 import (
@@ -8,6 +11,7 @@ import (
 
 	"github.com/google/wire"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/labstack/echo/v4"
 )
 
 var ProvideRepositories = wire.NewSet(
@@ -21,11 +25,15 @@ var ProvideUseCases = wire.NewSet(
 	usecase.NewAuth,
 )
 
+var ProvideHandlerGroup = wire.NewSet(
+	handler.NewFileGroup,
+	handler.NewFileGroup,
+)
 var ProvideHandler = wire.NewSet(
 	handler.NewHandler,
 )
 
-func InitializeFile(log *slog.Logger, db *pgxpool.Pool) *handler.Handler {
+func InitializeFile(e *echo.Echo, log *slog.Logger, db *pgxpool.Pool) *handler.Handler {
 	wire.Build(
 		ProvideRepositories,
 		ProvideUseCases,

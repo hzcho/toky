@@ -8,12 +8,18 @@ import (
 )
 
 type AuthGroup struct{
-	auth usecase.Auth
+	authUseCase usecase.Auth
 }
 
 type AuthReq struct{
 	Email string `json:"email"`
 	Password string `json:"password"`
+}
+
+func NewAuthGroup(authUseCase usecase.Auth)*AuthGroup{
+	return &AuthGroup{
+		authUseCase: authUseCase,
+	}
 }
 
 func (g *AuthGroup) SignIn(c echo.Context) error{
@@ -23,7 +29,7 @@ func (g *AuthGroup) SignIn(c echo.Context) error{
 		return c.JSON(http.StatusBadRequest, "incorrect request structure")
 	}
 
-	token, err:=g.auth.GenerateToken(c.Request().Context(), input.Email, input.Password)
+	token, err:=g.authUseCase.GenerateToken(c.Request().Context(), input.Email, input.Password)
 	if err!=nil{
 		return c.JSON(http.StatusInternalServerError, "couldn't create the token")
 	}
@@ -40,7 +46,7 @@ func (g *AuthGroup) Register(c echo.Context) error{
 		return c.JSON(http.StatusBadRequest, "incorrect request structure")
 	}
 
-	userId, err:=g.auth.CreateUser(c.Request().Context(), input.Email, input.Password)
+	userId, err:=g.authUseCase.CreateUser(c.Request().Context(), input.Email, input.Password)
 	if err!=nil{
 		return c.JSON(http.StatusInternalServerError, "couldn't create the user")
 	}

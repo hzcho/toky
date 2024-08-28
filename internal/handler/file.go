@@ -14,12 +14,12 @@ type FileSaveReq struct {
 }
 
 type FileGroup struct {
-	usecase.FileUseCase
+	fileUseCase usecase.FileUseCase
 }
 
-func NewFileGroup(usecase *usecase.FileUseCase) *FileGroup{
+func NewFileGroup(usecase usecase.FileUseCase) *FileGroup{
 	return &FileGroup{
-
+		fileUseCase: usecase,
 	}
 }
 
@@ -46,7 +46,7 @@ func (g *FileGroup) Save(c echo.Context) error {
 		Size:     file.Size,
 	}
 
-	if err := g.FileUseCase.UploadFile(c.Request().Context(), metadata, src); err != nil {
+	if err := g.fileUseCase.UploadFile(c.Request().Context(), metadata, src); err != nil {
 		return c.JSON(http.StatusInternalServerError, "failed to upload file")
 	}
 
