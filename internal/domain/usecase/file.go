@@ -6,6 +6,6 @@ import (
 	"toky/internal/domain/model"
 )
 
-type FileUseCase interface{
+type File interface {
 	UploadFile(ctx context.Context, metadata *model.FileMetadata, file io.Reader) error
 }

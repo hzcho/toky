@@ -5,12 +5,12 @@ import (
 )
 
 type Handler struct {
-	fileGroup  *FileGroup
-	authGroup  *AuthGroup
-	middleware *Middleware
+	fileGroup  FileGroup
+	authGroup  AuthGroup
+	middleware Middleware
 }
 
-func NewHandler(e *echo.Echo, fileGroup *FileGroup, authGroup *AuthGroup, middleware *Middleware) *Handler {
+func NewHandler(e *echo.Echo, fileGroup FileGroup, authGroup AuthGroup, middleware Middleware) *Handler {
 	handler := &Handler{
 		fileGroup:  fileGroup,
 		authGroup:  authGroup,

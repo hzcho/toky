@@ -14,11 +14,11 @@ type FileSaveReq struct {
 }
 
 type FileGroup struct {
-	fileUseCase usecase.FileUseCase
+	fileUseCase usecase.File
 }
 
-func NewFileGroup(usecase usecase.FileUseCase) *FileGroup{
-	return &FileGroup{
+func NewFileGroup(usecase usecase.File) FileGroup {
+	return FileGroup{
 		fileUseCase: usecase,
 	}
 }

@@ -1,10 +1,11 @@
 package usecase
 
-import(
+import (
 	"context"
 )
+
 type Auth interface {
-	CreateUser(ctx context.Context, username, password string) (int, error)
-	GenerateToken(ctx context.Context, username, password string) (string, error)
-	VerifyToken(ctx context.Context, token string) (int, error)
+	CreateUser(ctx context.Context, email, password string) (uint64, error)
+	GenerateToken(ctx context.Context, email, password string) (string, error)
+	VerifyToken(ctx context.Context, tkn string) (string, error)
 }

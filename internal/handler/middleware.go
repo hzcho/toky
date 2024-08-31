@@ -17,6 +17,12 @@ type Middleware struct {
 	auth usecase.Auth
 }
 
+func NewMiddleware(auth usecase.Auth) Middleware {
+	return Middleware{
+		auth: auth,
+	}
+}
+
 func (m *Middleware) userIdentity(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		header := c.Request().Header.Get(authorizationHeader)
@@ -40,6 +46,6 @@ func (m *Middleware) userIdentity(next echo.HandlerFunc) echo.HandlerFunc {
 
 		c.Set(userEmail, email)
 
-		return nil
+		return next(c)
 	}
 }

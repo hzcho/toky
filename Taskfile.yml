@@ -3,4 +3,4 @@ version: '3'
 tasks:
   di_gen:
     cmds: 
-      - go run github.com/google/wire/cmd/wire@v0.6.0
+      - cd ./internal/injection && go run github.com/google/wire/cmd/wire@v0.6.0

@@ -2,24 +2,25 @@ package repository
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"toky/internal/domain/model"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type FileMetadata struct {
 	db *pgxpool.Pool
 }
 
-func NewFileMetadata(db *pgxpool.Pool)*FileMetadata{
+func NewFileMetadata(db *pgxpool.Pool) *FileMetadata {
 	return &FileMetadata{
 		db: db,
 	}
 }
 
 func (r *FileMetadata) Save(ctx context.Context, metadata *model.FileMetadata) error {
-	query := "insert into file_metadata (file_name, path, created_at) values ($1, $2, $3, $4)"
+	query := "insert into file_metadata (file_name, path, size, created_at) values ($1, $2, $3, $4)"
 
-	_, err := r.db.Exec(ctx, query, metadata.FileName, metadata.Path, metadata.CreatedAt)
+	_, err := r.db.Exec(ctx, query, metadata.FileName, metadata.Path, metadata.Size, metadata.CreatedAt)
 	if err != nil {
 		return err
 	}
@@ -78,11 +79,11 @@ func (r *FileMetadata) List(ctx context.Context) ([]*model.FileMetadata, error) 
 			&metadata.Size,
 			&metadata.CreatedAt,
 		)
-		if err!=nil {
+		if err != nil {
 			return nil, err
 		}
 
-		metadataList=append(metadataList, metadata)
+		metadataList = append(metadataList, metadata)
 	}
 
 	return metadataList, nil

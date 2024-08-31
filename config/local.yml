@@ -1,4 +1,6 @@
 env: "local"
+upload_dir: "./upload"
+token_ttl: 1h
 
 server: 
   port: "8080"
@@ -7,6 +9,6 @@ server:
 db:
   username: "postgres"
   host: "localhost"
-  port: "5432"
-  dbname: "tocy_db"
+  port: "5436"
+  dbname: "postgres"
   sslmode: "disable"
